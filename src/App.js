@@ -4,7 +4,7 @@ function App() {
 
     return (
         <>
-            <Header text={true} />
+            <Header bgColor='red' textColor='blue' />
             <div className="container">
                 <h1>MyApp</h1>
             </div>

@@ -1,57 +1,66 @@
-import { useState } from "react"
-import RatingSelect from "./RatingSelect"
-import Card from "./shared/Card"
-import Button from "./shared/Button"
+import { useState, useContext } from "react";
+import RatingSelect from "./RatingSelect";
+import Card from "./shared/Card";
+import Button from "./shared/Button";
+import FeedbackContext from "../context/FeedbackContext";
 
-function FeedbackForm({ handleAdd }) {
-    const [text, setText] = useState('')
-    const [rating, setRating] = useState(10)
-    const [btnDisabled, setBtnDisabled] = useState(true)
-    const [message, setMessage] = useState('')
+function FeedbackForm() {
+  const [text, setText] = useState("");
+  const [rating, setRating] = useState(10);
+  const [btnDisabled, setBtnDisabled] = useState(true);
+  const [message, setMessage] = useState("");
 
-    const handleTextChange = (e) => {
-        if (text === '') {
-            setBtnDisabled(true)
-            setMessage(null)
-        } else if (text !== '' && text.trim().length <= 10) {
-            setBtnDisabled(true)
-            setMessage('Text Entered Must be atleast 10 Characters')
-        } else {
-            setBtnDisabled(false)
-            setMessage(null)
-        }
+  const { addFeedback } = useContext(FeedbackContext);
 
-        setText(e.target.value)
+  const handleTextChange = (e) => {
+    if (text === "") {
+      setBtnDisabled(true);
+      setMessage(null);
+    } else if (text !== "" && text.trim().length <= 10) {
+      setBtnDisabled(true);
+      setMessage("Text Entered Must be atleast 10 Characters");
+    } else {
+      setBtnDisabled(false);
+      setMessage(null);
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (text.trim().length > 10) {
-            const newFeedback = {
-                text,
-                rating,
-            }
+    setText(e.target.value);
+  };
 
-            handleAdd(newFeedback)
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (text.trim().length > 10) {
+      const newFeedback = {
+        text,
+        rating,
+      };
 
-            setText('')
-        }
+      addFeedback(newFeedback);
+
+      setText("");
     }
+  };
 
-
-    return (
-        <Card>
-            <form onSubmit={handleSubmit} >
-                <h2>How would you rate your service with us?</h2>
-                <RatingSelect select={(rating) => setRating(rating)} />
-                <div className="input-group">
-                    <input onChange={handleTextChange} type="text" placeholder="Write a review" value={text} />
-                    <Button type="submit" isDisabled={btnDisabled} >Send</Button>
-                </div>
-                {message && <div className="message">{message}</div>}
-            </form>
-        </Card>
-    )
+  return (
+    <Card>
+      <form onSubmit={handleSubmit}>
+        <h2>How would you rate your service with us?</h2>
+        <RatingSelect select={(rating) => setRating(rating)} />
+        <div className="input-group">
+          <input
+            onChange={handleTextChange}
+            type="text"
+            placeholder="Write a review"
+            value={text}
+          />
+          <Button type="submit" isDisabled={btnDisabled}>
+            Send
+          </Button>
+        </div>
+        {message && <div className="message">{message}</div>}
+      </form>
+    </Card>
+  );
 }
 
-export default FeedbackForm
+export default FeedbackForm;
